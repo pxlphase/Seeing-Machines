@@ -1,0 +1,34 @@
+[
+  {
+    "query": "asphalt",
+    "issue_type": "retrieval mismatch",
+    "description": "Caption-mediated retrieval for 'asphalt' surfaced this butterfly render at rank 5, unrelated to any of the genuinely granular dark textures found elsewhere. Likely matched on incidental shared caption vocabulary rather than visual similarity, since nothing about a pastel butterfly resembles asphalt. Worth noting the chat model itself stayed honest and refused to confirm any image as asphalt when asked directly.",
+    "model_said": "chat answer: 'I cannot confirm that any of these images depict asphalt'",
+    "actually_is": "a pastel-colored butterfly render, no textural or color relation to asphalt",
+    "logged_at": "2026-07-08T14:03:19.309022"
+  },
+  {
+    "query": "tree",
+    "issue_type": "missed resemblance",
+    "description": "SigLIP2 correctly retrieved this as a tree purely from visual silhouette (conical, tapering, evergreen-like branch structure). The caption route missed it entirely: the captioning model described it as abstract geometric/particle structure with no noted resemblance, so no caption text existed for the query 'tree' to match against. My schema deliberately discourages forcing resemblances to avoid false positives elsewhere, which cost recall here on an obvious real case.",
+    "model_said": "captioned as abstract, no clear resemblance noted; chat explicitly denied any tree resemblance",
+    "actually_is": "a clearly tree-shaped particle render, conical evergreen silhouette",
+    "logged_at": "2026-07-08T14:03:19.324264"
+  },
+  {
+    "query": "a galaxy or nebula",
+    "issue_type": "rationalized false resemblance",
+    "description": "For 'a galaxy or nebula,' caption-mediated retrieval surfaced this GlSL shader, and rather than rejecting the match the model stretched to justify it, citing 'radiating streaks,' 'luminous,' and 'glow' as vague evidence of a cosmic resemblance. These are words shared with genuine nebula-like renders in the corpus, but a symmetrical mandala bears no real visual resemblance to a galaxy. Different failure mode than the tree case: here the model overreaches instead of underclaiming.",
+    "model_said": "'radiating streaks and dense fields... somewhat similar to how light and gas flow in nebulae'",
+    "actually_is": "a symmetrical geometric kaleidoscope shader, not a cosmic or celestial form",
+    "logged_at": "2026-07-08T14:03:19.335141"
+  },
+  {
+    "query": "a calm and peaceful scene",
+    "issue_type": "mislabeled mood",
+    "description": "This high-contrast, aggressive pattern was captioned with the mood 'serene, contemplative' which doesn't match what's visually there. Caption-mediated retrieval trusted that mood label for the query 'a calm and peaceful scene' and ranked this image first, ahead of genuinely calmer sunset renders elsewhere in the corpus, and also surfaced two visually chaotic fire-toned images for the same reason. Shows the caption route inherits whatever mood-reading errors the VLM made at captioning time, with no way to correct for it at retrieval time.",
+    "model_said": "'serene, contemplative, slightly melancholic, with a hint of warmth'",
+    "actually_is": "a stark, high-contrast symmetrical pattern with no calm but melancholic visual qualities",
+    "logged_at": "2026-07-08T14:03:19.359617"
+  }
+]

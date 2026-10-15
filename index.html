@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seeing Machines — A Multimodal Archive Companion</title>
+<meta name="description" content="A multimodal RAG archive companion built over a personal generative-art corpus, documenting where vision-language models see correctly and where they mis-see.">
+
+<meta property="og:title" content="Seeing Machines — A Multimodal Archive Companion">
+<meta property="og:description" content="What a vision-language model sees, mis-sees, and imagines in an abstract CGI archive.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+
+<style id="aesthetic-tweaks">
+    /* Fix the canvas to the background permanently */
+    #hero-canvas {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: -1 !important;
+        pointer-events: none !important;
+    }
+
+    /* Image hover animations */
+    img {
+        cursor: zoom-in;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    img:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+
+    /* Dossier Flexbox Layout */
+    .dossier-card {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 2rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(4px);
+        transition: background 0.3s ease;
+    }
+    .dossier-card:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    .dossier-image img {
+        width: 100% !important;
+        height: 100% !important;
+        max-height: 280px !important; /* Prevents them from getting absurdly tall */
+        object-fit: contain !important;
+        align-self: center !important;
+    }
+    .dossier-body {
+        flex: 2 1 400px;
+    }
+
+    /* Atlas Cards Polish */
+    .atlas-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(4px);
+    }
+
+    /* Thumbnail Grid Polish */
+    .thumb-placeholder {
+        background: rgba(255, 255, 255, 0.03) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+        backdrop-filter: blur(4px) !important;
+        transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .thumb-placeholder:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.06) !important;
+    }
+
+    /* Lightbox Modal CSS */
+    #image-lightbox {
+        display: none; 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        width: 100vw; 
+        height: 100vh; 
+        background: rgba(0, 0, 0, 0.85); 
+        backdrop-filter: blur(8px);
+        z-index: 9999; 
+        justify-content: center; 
+        align-items: center; 
+        cursor: zoom-out; 
+        opacity: 0; 
+        transition: opacity 0.3s ease;
+    }
+    #image-lightbox img {
+        max-width: 90vw; 
+        max-height: 90vh; 
+        object-fit: contain; 
+        border-radius: 8px; 
+        box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        cursor: default;
+        transform: scale(0.95);
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    #image-lightbox.active {
+        opacity: 1;
+    }
+    #image-lightbox.active img {
+        transform: scale(1);
+    }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="#top" class="nav-mark">SM<span class="nav-mark-dot">·</span></a>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="#abstract">Abstract</a></li>
+      <li><a href="#approach">Approach</a></li>
+      <li><a href="#atlas">Retrieval Atlas</a></li>
+      <li><a href="#dossier">Mis-Seeing Dossier</a></li>
+      <li><a href="#evaluation">Evaluation</a></li>
+      <li><a href="#reflection">Reflection</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <canvas id="hero-canvas" aria-hidden="true"></canvas>
+  <div class="hero-content">
+    <p class="eyebrow">CompSci for Designers 2 · MA Design for Digital Futures · TH Nürnberg</p>
+    <h1 class="hero-title">Seeing&nbsp;Machines</h1>
+    <p class="hero-tagline">
+      A retrieval-augmented archive over generative visuals and a record of everywhere the machine saw something that wasn't there.
+    </p>
+    <div class="hero-meta">
+      <span>Amin Rasti Pour</span>
+      <span class="meta-sep">—</span>
+      <span>Summer 2026</span>
+      <span class="meta-sep">—</span>
+      <span>Supervisors:(Moritz Schwind, Christopher Kopic)</span>
+      <span>Level 3 · The Critic</span>
+
+    </div>
+    <div class="hero-links">
+      <a href="https://colab.research.google.com/drive/1oS9EpY9W51XQ2Rua0A02FnXBY5xOc35M?usp=sharing" class="hero-link">Colab notebook ↗</a>
+      <a href="#atlas" class="hero-link">Results ↓</a>
+    </div>
+  </div>
+  <div class="hero-scroll-cue" aria-hidden="true">
+    <span>scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</header>
+
+<main>
+
+<section class="section prose" id="abstract">
+  <p class="section-label">Abstract</p>
+  <p>
+    Seeing Machines is a retrieval-augmented system built over a personal archive of
+    <strong>[346] generative visuals</strong> produced in TouchDesigner, particle simulations,
+    2D fluid solvers, procedural noise fields, generative geometry, etc. The project asks a
+    specific question: when a vision-language model describes a procedurally generated,
+    non-representational image, does it stay honest about its uncertainty, or does it impose
+    real-world objects and scenes that were never there? A joint text–image embedding model
+    (SigLIP 2) provides direct semantic search over the corpus, while a vision-language model
+    (Gemma 3 4B) generates structured descriptions that are embedded and retrieved separately,
+    enabling grounded conversation with the archive. Both routes are compared directly, and every
+    documented failure, hallucinated objects, skewed readings, and moments of genuine ambiguity are
+    treated as a primary finding, not an error to hide.
+  </p>
+</section>
+
+<section class="section prose" id="motivation">
+  <p class="section-label">Motivation &amp; Corpus</p>
+  <h2>Why this archive</h2>
+  <p>
+    I know these systems from the inside; I built each one and understand exactly what
+    parameters, seeds, and solver states produced every frame. That gives me a ground truth a
+    generic dataset never could: when the machine describes an image, I can check its reading
+    against what is structurally, mechanically true about the image, not just against my own
+    aesthetic impression of it.
+  </p>
+
+  <div class="statement-block">
+    <h3>What the collection is</h3>
+    <p>
+      [346] frames sampled across various distinct generative systems built in TouchDesigner: particle
+      simulations, 2D physics/fluid solvers, solver-based system, noise-driven / procedural
+      shape generators, OpenGL shaders, etc. Frames span different camera angles, parameter states, and points in each
+      system's timeline, rather than one still per project.
+    </p>
+    <h3>Why I chose it</h3>
+    <p>
+      My research interest is pareidolia in vision-language models, whether a model reads
+      real-world meaning into visuals that are procedurally generated and carry no representational
+      intent. Knowing each system's internal logic lets me tell the difference between a coincidental
+      resemblance that is genuinely there in the image and one the model has invented.
+    </p>
+    <h3>How I curated it</h3>
+    <p>
+      Frames were exported across numerous projects, sampling multiple timeline states and camera
+      positions per system to capture both within-system variation and between-system diversity,
+      rather than hand-picking a single best frame per project.
+    </p>
+  </div>
+</section>
+  
+<div class="thumb-grid" style="display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: flex-start !important; flex-wrap: wrap !important; gap: 25px; margin-bottom: 4rem;">
+
+    <div class="thumb-placeholder" style="width: 220px !important; min-height: 260px !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important;">
+        <img src="sample (1).jpg" alt="Corpus sample 01" style="max-width: 100%; max-height: 160px; object-fit: contain; margin: 0 auto 12px auto; display: block;">
+        <span style="font-size: 14px; color: #e0e0e0 !important; font-weight: 500; text-align: center !important; display: block !important; width: 100% !important;">corpus sample 01</span>
+    </div>
+
+    <div class="thumb-placeholder" style="width: 220px !important; min-height: 260px !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important;">
+        <img src="sample (2).jpg" alt="Corpus sample 02" style="max-width: 100%; max-height: 160px; object-fit: contain; margin: 0 auto 12px auto; display: block;">
+        <span style="font-size: 14px; color: #e0e0e0 !important; font-weight: 500; text-align: center !important; display: block !important; width: 100% !important;">corpus sample 02</span>
+    </div>
+
+    <div class="thumb-placeholder" style="width: 220px !important; min-height: 260px !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important;">
+        <img src="sample (3).jpg" alt="Corpus sample 03" style="max-width: 100%; max-height: 160px; object-fit: contain; margin: 0 auto 12px auto; display: block;">
+        <span style="font-size: 14px; color: #e0e0e0 !important; font-weight: 500; text-align: center !important; display: block !important; width: 100% !important;">corpus sample 03</span>
+    </div>
+
+    <div class="thumb-placeholder" style="width: 220px !important; min-height: 260px !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important;">
+        <img src="sample (4).png" alt="Corpus sample 04" style="max-width: 100%; max-height: 160px; object-fit: contain; margin: 0 auto 12px auto; display: block;">
+        <span style="font-size: 14px; color: #e0e0e0 !important; font-weight: 500; text-align: center !important; display: block !important; width: 100% !important;">corpus sample 04</span>
+    </div>
+
+    <div class="thumb-placeholder" style="width: 220px !important; min-height: 260px !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important;">
+        <img src="sample (5).jpg" alt="Corpus sample 05" style="max-width: 100%; max-height: 160px; object-fit: contain; margin: 0 auto 12px auto; display: block;">
+        <span style="font-size: 14px; color: #e0e0e0 !important; font-weight: 500; text-align: center !important; display: block !important; width: 100% !important;">corpus sample 05</span>
+    </div>
+
+    <div class="thumb-placeholder" style="width: 220px !important; min-height: 260px !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important;">
+        <img src="sample (6).jpg" alt="Corpus sample 06" style="max-width: 100%; max-height: 160px; object-fit: contain; margin: 0 auto 12px auto; display: block;">
+        <span style="font-size: 14px; color: #e0e0e0 !important; font-weight: 500; text-align: center !important; display: block !important; width: 100% !important;">corpus sample 06</span>
+    </div>
+  
+</div>
+
+<section class="section prose" id="approach">
+  <p class="section-label">Approach</p>
+  <h2>Pipeline</h2>
+  <p>
+    Three levels, each reusing the previous level's retrieval as a component rather than
+    replacing it.
+  </p>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 980 300" class="pipeline-svg" role="img" aria-label="Pipeline diagram: corpus to embedding, captioning, hybrid retrieval, and evaluation">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--line-strong)"/>
+        </marker>
+      </defs>
+
+      <g transform="translate(20,110)">
+        <rect width="140" height="80" rx="6" class="node node-corpus"/>
+        <text x="70" y="36" class="node-title">Corpus</text>
+        <text x="70" y="56" class="node-sub">TD renders</text>
+      </g>
+      <line x1="160" y1="150" x2="220" y2="150" class="edge" marker-end="url(#arrow)"/>
+
+      <g transform="translate(220,60)">
+        <rect width="180" height="180" rx="6" class="node node-l1"/>
+        <text x="90" y="30" class="node-eyebrow">LEVEL 1</text>
+        <text x="90" y="55" class="node-title">The Finder</text>
+        <text x="90" y="90" class="node-sub">SigLIP 2</text>
+        <text x="90" y="108" class="node-sub">joint embedding</text>
+        <text x="90" y="140" class="node-sub">cosine top-k</text>
+        <text x="90" y="158" class="node-sub">search</text>
+      </g>
+      <line x1="400" y1="150" x2="460" y2="150" class="edge" marker-end="url(#arrow)"/>
+
+      <g transform="translate(460,40)">
+        <rect width="200" height="220" rx="6" class="node node-l2"/>
+        <text x="100" y="30" class="node-eyebrow">LEVEL 2</text>
+        <text x="100" y="55" class="node-title">The Companion</text>
+        <text x="100" y="90" class="node-sub">Gemma 3 4B</text>
+        <text x="100" y="108" class="node-sub">structured captions</text>
+        <text x="100" y="138" class="node-sub">caption embedding</text>
+        <text x="100" y="156" class="node-sub">+ retrieval</text>
+        <text x="100" y="186" class="node-sub">grounded chat</text>
+        <text x="100" y="204" class="node-sub">generation</text>
+      </g>
+      <line x1="660" y1="150" x2="720" y2="150" class="edge" marker-end="url(#arrow)"/>
+
+      <g transform="translate(720,20)">
+        <rect width="220" height="260" rx="6" class="node node-l3"/>
+        <text x="110" y="30" class="node-eyebrow">LEVEL 3</text>
+        <text x="110" y="55" class="node-title">The Critic</text>
+        <text x="110" y="90" class="node-sub">hybrid fusion</text>
+        <text x="110" y="108" class="node-sub">(CLIP + captions)</text>
+        <text x="110" y="138" class="node-sub">multimodal</text>
+        <text x="110" y="156" class="node-sub">grounding</text>
+        <text x="110" y="186" class="node-sub">precision@k</text>
+        <text x="110" y="204" class="node-sub">evaluation</text>
+      </g>
+    </svg>
+  </div>
+
+  <h3>Description schema &amp; captioning prompt</h3>
+  <p>
+    Each image is captioned into a structured schema rather than a single free-text caption,
+    splitting purely visual description from the model's interpretive reading:
+  </p>
+  <div class="schema-grid">
+    <div class="schema-field"><code>literal_description</code><span>shapes, values, density, motion — no naming of real-world things</span></div>
+    <div class="schema-field"><code>perceived_subject</code><span>what the model thinks this resembles, if anything</span></div>
+    <div class="schema-field"><code>resemblance_confidence</code><span>abstract / low / medium / high</span></div>
+    <div class="schema-field"><code>composition</code><span>framing, layout, focal point</span></div>
+    <div class="schema-field"><code>color_palette</code><span>2–4 dominant tones</span></div>
+    <div class="schema-field"><code>texture</code><span>surface qualities</span></div>
+    <div class="schema-field"><code>mood</code><span>atmospheric read</span></div>
+    <div class="schema-field"><code>notable_elements</code><span>specific indexable details</span></div>
+    <div class="schema-field"><code>ambiguous_or_uncertain</code><span>what the model itself flags as unsure</span></div>
+  </div>
+  <p>
+    The split between <code>literal_description</code> and <code>perceived_subject</code> exists
+    because my research question is specifically about pareidolia: whether the model reads
+    real-world meaning into visuals with no representational intent. A single blended field would
+    hide that behavior; forcing the model to describe visually first, then separately commit to
+    (or decline) a real-world resemblance with a stated confidence, makes the phenomenon directly
+    measurable and sortable across the whole corpus.
+  </p>
+
+</section>
+
+<section class="section" id="atlas">
+  <div class="prose">
+    <p class="section-label">Results — Level 1</p>
+    <h2>Retrieval Atlas</h2>
+    <p>
+      Documented queries against the SigLIP 2 embedding space, successes and failures, each
+      explained in terms of what the embedding is actually keying on.
+    </p>
+  </div>
+
+  <div class="atlas-card verdict-success">
+    <div class="card-head">
+      <span class="verdict-chip">success</span>
+      <h3>"fabric or woven texture"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download (15).png" alt="Fabric or woven texture retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">Good one, the dark woven textures look like actual fabric weave and the smooth cream swirl ones look like folded cloth, solid match across the board.</p>
+  </div>
+
+  <div class="atlas-card verdict-success">
+    <div class="card-head">
+      <span class="verdict-chip">success</span>
+      <h3>"sunset over water"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download (1).png" alt="Sunset over water retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">First few results are a genuinely great match, warm gradient over water reflection look, but it falls apart toward the end with random blue grid and pixel mosaic stuff.</p>
+  </div>
+
+  <div class="atlas-card verdict-success">
+    <div class="card-head">
+      <span class="verdict-chip">success</span>
+      <h3>"a human face"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download (2).png" alt="Human face retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">Actually kind of unsettling, almost every result resembles a human face but they are affected heavily with effects, of course.</p>
+  </div>
+
+  <div class="atlas-card verdict-success">
+    <div class="card-head">
+      <span class="verdict-chip">success</span>
+      <h3>"a galaxy or nebula"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download (7).png" alt="Galaxy or nebula retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">Genuinely the best result set. The dark blue starfield one and the orange nebula-blob one look like space photos.</p>
+  </div>
+
+  <div class="atlas-card verdict-success">
+    <div class="card-head">
+      <span class="verdict-chip">success</span>
+      <h3>"fire and smoke"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download (8).png" alt="Fire and smoke retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">The orange/black swirl and the marble sphere both have kind of the fire look, and the grainy dark one actually reads more like smoke than fire.</p>
+  </div>
+
+  <div class="atlas-card verdict-success">
+    <div class="card-head">
+      <span class="verdict-chip">success</span>
+      <h3>"cracked stone or ceramic"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download (9).png" alt="Cracked stone or ceramic retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">Good matches, the dark cratered textures really do look like cracked surfaces.</p>
+  </div>
+
+  <div class="atlas-card verdict-success">
+    <div class="card-head">
+      <span class="verdict-chip">success</span>
+      <h3>"circuit board pattern"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download (10).png" alt="Circuit board pattern retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">By far the most consistent result set out of everything, same grid screenshots keep showing up here and honestly this is the strongest, most obvious match in the whole atlas.</p>
+  </div>
+
+  <div class="atlas-card verdict-success">
+    <div class="card-head">
+      <span class="verdict-chip">success</span>
+      <h3>"lightning"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download (16).png" alt="Lightning retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">Surprised me! The jagged blue streaks and the orange starburst both kind of read as electricity/sparks, this one just works.</p>
+  </div>
+
+  <div class="atlas-card verdict-success">
+    <div class="card-head">
+      <span class="verdict-chip">success</span>
+      <h3>"DNA or cellular structure"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download (14).png" alt="DNA or cellular structure retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">First 3 results are basically the same faint grid image repeated which isn't DNA-like at all but I see the medical resemblance for all the returned images, but the colorful blob one after that genuinely does look cell-like.</p>
+  </div>
+
+  <div class="atlas-card verdict-success">
+    <div class="card-head">
+      <span class="verdict-chip">success</span>
+      <h3>"a spider web"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download (19).png" alt="Spider web retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">Actually pretty good, a bunch of the green branching ones genuinely look like web strands radiating out, didn't expect that to work this well.</p>
+  </div>
+
+  <div class="atlas-card verdict-mixed">
+    <div class="card-head">
+      <span class="verdict-chip">mixed</span>
+      <h3>"a swarm of insects"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download (3).png" alt="Swarm of insects retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">The pale scattered dots one looks like an actual swarm, but a lot of the rest is just grainy stuff that got pulled in probably because they resemble swarms from far distance?!</p>
+  </div>
+
+  <div class="atlas-card verdict-mixed">
+    <div class="card-head">
+      <span class="verdict-chip">mixed</span>
+      <h3>"flowing hair"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download (4).png" alt="Flowing hair retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">The swirly ones (pink, teal, purple) genuinely have that flowing strand look, it is kind of right on the flow part but for the hair it is hard for it to come up with anything better.</p>
+  </div>
+
+  <div class="atlas-card verdict-mixed">
+    <div class="card-head">
+      <span class="verdict-chip">mixed</span>
+      <h3>"storm clouds"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download (5).png" alt="Storm clouds retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">The streaky gray ones are believable as heavy cloud texture but then colorful splashes show up which don't fit at all.</p>
+  </div>
+
+  <div class="atlas-card verdict-mixed">
+    <div class="card-head">
+      <span class="verdict-chip">mixed</span>
+      <h3>"dense forest canopy"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download (11).png" alt="Dense forest canopy retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">The green/purple ones from above kind of read as canopy seen from a drone, but half the results have similarities I couldn't connect before this, more color-matching than concept-matching I think.</p>
+  </div>
+
+  <div class="atlas-card verdict-mixed">
+    <div class="card-head">
+      <span class="verdict-chip">mixed</span>
+      <h3>"a school of fish"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download (17).png" alt="School of fish retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">The blue streaky line ones do look like fish swimming in formation which is cool, but then random unrelated pink and blue block stuff snuck in too.</p>
+  </div>
+
+  <div class="atlas-card verdict-mixed">
+    <div class="card-head">
+      <span class="verdict-chip">mixed</span>
+      <h3>"melting ice"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download (18).png" alt="Melting ice retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">The grainy black and white textures kind of pass as ice/frost but that one colorful marble sphere at the end makes no sense here, feels like a color-based fluke.</p>
+  </div>
+
+  <div class="atlas-card verdict-failure">
+    <div class="card-head">
+      <span class="verdict-chip">failure</span>
+      <h3>"bicycle"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download.png" alt="Bicycle retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">No real bicycle match obviously, but interesting that the circular mandala/kaleidoscope patterns showed up, guess the spoke-like radial lines got associated with wheels somehow.</p>
+  </div>
+
+  <div class="atlas-card verdict-failure">
+    <div class="card-head">
+      <span class="verdict-chip">failure</span>
+      <h3>"frog"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download (12).png" alt="Frog retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">Kind of a joke query but wanted to see, none of these look like a frog. Closest is the bumpy grainy texture which could pass as frog skin if I squint but that's a stretch.</p>
+  </div>
+
+  <div class="atlas-card verdict-failure">
+    <div class="card-head">
+      <span class="verdict-chip">failure</span>
+      <h3>"ripples on water"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download (13).png" alt="Ripples on water retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">The yellow/black contour map (JFA) is a good match for ripples, rest are not good enough to pass I would say.</p>
+  </div>
+
+  <div class="atlas-card verdict-failure">
+    <div class="card-head">
+      <span class="verdict-chip">failure</span>
+      <h3>"sparse minimal composition"</h3>
+    </div>
+    <div class="card-image">
+      <img src="atlas/download (20).png" alt="Sparse minimal composition retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <p class="card-explanation">Mostly pulled the same grid/graph-paper screenshots over and over, that's not sparse at all, it's dense and repetitive, feels like it just latched onto thin dark lines on light background.</p>
+  </div>
+
+</section>
+
+<section class="section" id="dossier">
+  <div class="prose">
+    <p class="section-label">Results — Level 2</p>
+    <h2>Mis-Seeing Dossier</h2>
+    <p>
+      Cases where Gemma 3's captions diverged from what the image actually shows — hallucinated
+      objects, skewed readings, or genuine ambiguity the model itself flagged.
+    </p>
+  </div>
+
+  <div class="dossier-card">
+    <div class="dossier-image">
+      <img src="asphalt.png" alt="Asphalt query retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <div class="dossier-body">
+      <span class="issue-chip">retrieval_mismatch</span>
+      <div class="dossier-row"><span class="dossier-label">Query</span><p>"asphalt"</p></div>
+      <div class="dossier-row"><span class="dossier-label">Model said</span><p>"I cannot confirm that any of these images depict asphalt"</p></div>
+      <div class="dossier-row"><span class="dossier-label">Actually is</span><p>A pastel-colored butterfly render, no textural or color relation to asphalt</p></div>
+      <div class="dossier-row"><span class="dossier-label">Analysis</span><p>Caption-mediated retrieval for 'asphalt' surfaced this butterfly render at rank 5, unrelated to any of the genuinely granular dark textures found elsewhere. Likely matched on incidental shared caption vocabulary rather than visual similarity, since nothing about a pastel butterfly resembles asphalt. Worth noting the chat model itself stayed honest and refused to confirm any image as asphalt when asked directly.</p></div>
+    </div>
+  </div>
+
+  <div class="dossier-card">
+    <div class="dossier-image">
+      <img src="tree.png" alt="Tree query retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <div class="dossier-body">
+      <span class="issue-chip">missed_resemblance</span>
+      <div class="dossier-row"><span class="dossier-label">Query</span><p>"tree"</p></div>
+      <div class="dossier-row"><span class="dossier-label">Model said</span><p>Captioned as abstract, no clear resemblance noted; chat explicitly denied any tree resemblance</p></div>
+      <div class="dossier-row"><span class="dossier-label">Actually is</span><p>A clearly tree-shaped particle render, conical evergreen silhouette</p></div>
+      <div class="dossier-row"><span class="dossier-label">Analysis</span><p>SigLIP2 correctly retrieved this as a tree purely from visual silhouette (conical, tapering, evergreen-like branch structure). The caption route missed it entirely: the captioning model described it as abstract geometric/particle structure with no noted resemblance, so no caption text existed for the query 'tree' to match against. My schema deliberately discourages forcing resemblances to avoid false positives elsewhere, which cost recall here on an obvious real case.</p></div>
+    </div>
+  </div>
+
+  <div class="dossier-card">
+    <div class="dossier-image">
+      <img src="galaxy.png" alt="Galaxy or nebula query retrieval result" style="width: 100%; height: 100%; border-radius: 8px; display: block;">
+    </div>
+    <div class="dossier-body">
+      <span class="issue-chip">rationalized_false_resemblance</span>
+      <div class="dossier-row"><span class="dossier-label">Query</span><p>"a galaxy or nebula"</p></div>
+      <div class="dossier-row"><span class="dossier-label">Model said</span><p>"Radiating streaks and dense fields... somewhat similar to how light and gas flow in nebulae"</p></div>
+      <div class="dossier-row"><span class="dossier-label">Actually is</span><p>A symmetrical geometric kaleidoscope shader, not a cosmic or celestial form</p></div>
+      <div class="dossier-row"><span class="dossier-label">Analysis</span><p>For 'a galaxy or nebula,' caption-mediated retrieval surfaced this GLSL shader, and rather than rejecting the match the model stretched to justify it, citing 'radiating streaks,' 'luminous,' and 'glow' as vague evidence of a cosmic resemblance. These are words shared with genuine nebula-like renders in the corpus, but a symmetrical mandala bears no real visual resemblance to a galaxy. Different failure mode than the tree case: here the model overreaches instead of underclaiming.</p></div>
+    </div>
+  </div>
+
+  <div class="dossier-card">
+    <div class="dossier-image">
+      <img src="calm.png" alt="Calm and peaceful scene query retrieval result" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+    </div>
+    <div class="dossier-body">
+      <span class="issue-chip">mislabeled_mood</span>
+      <div class="dossier-row"><span class="dossier-label">Query</span><p>"a calm and peaceful scene"</p></div>
+      <div class="dossier-row"><span class="dossier-label">Model said</span><p>"Serene, contemplative, slightly melancholic, with a hint of warmth"</p></div>
+      <div class="dossier-row"><span class="dossier-label">Actually is</span><p>A stark, high-contrast symmetrical pattern with no calm but melancholic visual qualities</p></div>
+      <div class="dossier-row"><span class="dossier-label">Analysis</span><p>This high-contrast, aggressive pattern was captioned with the mood 'serene, contemplative' which doesn't match what's visually there. Caption-mediated retrieval trusted that mood label for the query 'a calm and peaceful scene' and ranked this image first, ahead of genuinely calmer sunset renders elsewhere in the corpus, and also surfaced two visually chaotic fire-toned images for the same reason. Shows the caption route inherits whatever mood-reading errors the VLM made at captioning time, with no way to correct for it at retrieval time.</p></div>
+    </div>
+  </div>
+
+</section>
+
+<section class="section prose" id="evaluation">
+  <p class="section-label">Results — Level 3</p>
+  <h2>Evaluation</h2>
+  <p>
+    Precision@5 measured across all three retrieval routes against a [20]-query gold-standard
+    set with known-correct images.
+  </p>
+
+  <div class="eval-chart">
+    <img src="barchart.png" alt="Precision@5 comparison across retrieval routes" style="width: 100%; height: auto; border-radius: 8px; display: block;">
+  </div>
+
+  <table class="eval-table">
+    <thead><tr><th>Route</th><th>Mean precision@5</th></tr></thead>
+    <tbody>
+      <tr><td>SigLIP 2 only</td><td>0.27</td></tr>
+      <tr><td>Caption only</td><td>0.20</td></tr>
+      <tr><td>Hybrid</td><td>0.31</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+  SigLIP2-only averaged precision@5 ≈ 0.27, caption-only ≈ 0.20, hybrid ≈ 0.31 across the
+20-query gold set; hybrid wins overall, but not just because it splits the difference.<p>
+
+<p>SigLIP2 wins clearly on queries with a strong visual/textural signal but no obvious name, "cool blue
+tones" (0.6 vs. 0.0 for captions) is the sharpest example, since color temperature is something an
+embedding reads directly from pixels, but a caption only reports if the schema happened to log it
+explicitly. Captions win on queries with a real subject the schema is built to catch, like "a human
+figure" and "a grid or lattice structure" (0.4 vs. 0.0 for CLIP on both), where semantic labeling
+beats raw visual similarity.<p>
+
+<p>The routes diverge most sharply exactly where hybrid gets interesting: On "dark and shadowy
+composition," "scattered random noise," and "thin wispy strands," hybrid scored higher than either
+individual route, not an average, an improvement over both, because  SigLIP2 and captions each
+caught a different correct image, and fusing let both surface in the merged top-5. But fusion isn't
+free. On "cool blue tones," where  SigLIP2 alone was strongly right, blending in the caption route's
+wrong answer pulled the hybrid score down from CLIP's 0.6 to 0.2.<p>
+
+<p>That's the real finding on fusion weighting: a fixed alpha=0.5 is a compromise that wins on average
+across a mixed query set, but it helps most when the two routes are complementary and actively
+hurts when one route is confidently right, and the other is confidently wrong. A per-query or
+adaptive alpha, leaning toward  SigLIP2 for texture/color queries and toward captions for named-subject
+queries, would likely outperform any single fixed weighting, and is the most concrete next step
+this evaluation points to.
+  </p>
+</section>
+
+<section class="section prose" id="reflection">
+  <p class="section-label">Reflection</p>
+  <h2>What I'd build next</h2>
+  <p>
+    The most surprising result was the "tree" query; SigLIP 2 found four unmistakably tree-shaped
+particle renders purely from silhouette, while the caption route missed all four completely. I
+went in assuming the caption route would be the more capable one, since it has language to work
+with. It turned out my own schema was the bottleneck: I designed `resemblance_confidence` to be
+conservative on purpose, to stop the model from forcing resemblances that weren't there, and it
+worked almost too well, making the model too cautious to name a resemblance that was genuinely
+obvious. Caution and recall turned out to be a direct trade-off, not two things I could have for
+free.<p>
+
+<p>My assumption that "obviously abstract" images would behave predictably also broke down in both
+directions, not just one. The mandala pattern retrieved for "a galaxy or nebula" showed the model
+overreaching, stretching vague words like "luminous" and "radiating" into a resemblance that
+wasn't visually there. The high-contrast zigzag pattern captioned as "serene, contemplative" for the "calm and peaceful" query showed something else again: not a
+hallucinated object, but a wrong emotional read that then propagated downstream into retrieval,
+since the caption route trusted its own earlier mood label without any way to double-check it. So
+three different queries produced three different mechanisms of failure, underclaiming, over-
+claiming, and mood misjudgment, not one repeatable "the model hallucinates" story.<p>
+
+<p>The hybrid retrieval numbers added a fourth layer: fusing the two routes isn't uniformly good. On
+several queries it beat both individual routes by catching different correct images from each; on
+"cool blue tones," where SigLip2 alone was strongly right (0.6) and captions were wrong (0.0), fusing
+actively pulled the score down. A fixed alpha=0.5 is a compromise across a mixed query set, not a
+universal improvement.<p>
+
+<p>What the next version needs, to catch its own mis-seeing without me eyeballing every result; a way
+to flag disagreement automatically rather than requiring a human to compare grids by hand. Concretely,
+that could mean cross-checking a caption's `perceived_subject` against SigLIP 2's own zero-shot
+classification confidence for that same label, and surfacing anything where the two disagree
+strongly as a review candidate, a lightweight, built-in mis-seeing detector rather than the manual
+dossier process I ran here. I'd also want per-query alpha instead of a fixed global one, since the
+evaluation data suggests different query types (texture/color vs. named-subject) genuinely favor
+different routes.
+  </p>
+</section>
+
+<section class="section prose" id="limitations">
+  <p class="section-label">Limitations</p>
+  <h2>What this system can't do</h2>
+  <ul class="limitations-list">
+    <li>The caption schema's conservative `resemblance_confidence` field, while designed to prevent
+  false positives, measurably reduced recall on genuine resemblances (see the "tree" case)
+  precision and recall were not both maximized by the same design choice.</li>
+    <li>Gemma 3 4B is a small VLM; caption quality and multimodal reasoning degrade with more than 3-4 images in context.</li>
+    <li>The gold-standard evaluation set (20 queries) is hand-labeled by me from a single pass through the
+  corpus, it reflects my own judgment of "correct," not an independent or blinded annotation, so
+  precision@k numbers should be read as indicative rather than authoritative.</li>
+    <li>Retrieval is zero-shot throughout; no fine-tuning was performed on this corpus for either the
+  embedding model or the caption/generation model.</li>
+     <li>Hybrid fusion uses a single fixed alpha across all queries; the evaluation results suggest the
+  optimal weighting is query-dependent, which a static alpha cannot capture.</li>
+  </ul>
+</section>
+
+<section class="section prose" id="sources">
+  <p class="section-label">Sources &amp; References</p>
+  <ul class="sources-list">
+    <li>Zhai et al., "Sigmoid Loss for Language Image Pre-Training" (SigLIP), 2023.</li>
+    <li>Tschannen et al., "SigLIP 2: Multilingual Vision-Language Encoders with Improved Semantic Understanding, Localization, and Dense Features," 2025.</li>
+    <li>Google, Gemma 3 model card / technical report, 2025.</li>
+    <li>Reimers & Gurevych, "Sentence-BERT," 2019 (sentence-transformers / all-MiniLM-L6-v2).</li>
+    <li>Rohrbach et al., "Object Hallucination in Image Captioning," EMNLP 2018 — background on the general phenomenon this project's mis-seeing dossier documents empirically.</li>
+    <li>TouchDesigner (Derivative) — used to generate the full source corpus (particle systems, 2D fluid/physics solvers, procedural noise and geometry).</li>   
+  </ul>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <p> Amin Rasti Pour · Seeing Machines · CompSci for Designers 2 · Summer 2026</p>
+</footer>
+
+<div id="image-lightbox">
+    <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+    // Global vanilla JS to handle the new clickable lightbox zoom without breaking existing scripts
+    document.addEventListener('DOMContentLoaded', () => {
+        const lightbox = document.getElementById('image-lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const allImages = document.querySelectorAll('img');
+
+        allImages.forEach(img => {
+            img.addEventListener('click', () => {
+                lightboxImg.src = img.src;
+                lightbox.style.display = 'flex';
+                // Small timeout to allow display:flex to apply before shifting opacity for smooth transition
+                setTimeout(() => lightbox.classList.add('active'), 10);
+            });
+        });
+
+        lightbox.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+            setTimeout(() => lightbox.style.display = 'none', 300);
+        });
+    });
+</script>
+
+<script src="assets/script.js"></script>
+</body>
+</html>

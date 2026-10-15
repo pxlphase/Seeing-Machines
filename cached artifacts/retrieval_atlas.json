@@ -1,0 +1,562 @@
+[
+  {
+    "query": "bicycle",
+    "verdict": "failure",
+    "top_results": [
+      {
+        "file": "8.png",
+        "similarity": 0.0599
+      },
+      {
+        "file": "TDMovieOut.167.jpg",
+        "similarity": 0.0556
+      },
+      {
+        "file": "TDMovieOut.26 (2).jpg",
+        "similarity": 0.0556
+      },
+      {
+        "file": "TDMovieOut.21 (3).jpg",
+        "similarity": 0.0519
+      },
+      {
+        "file": "TDMovieOut.163.jpg",
+        "similarity": 0.0515
+      }
+    ],
+    "explanation": "no real bicycle match obviously, but interesting that the circular mandala/kaleidoscope patterns showed up, guess the spoke-like radial lines got associated with wheels somehow",
+    "logged_at": "2026-07-08T12:02:03.629413"
+  },
+  {
+    "query": "sunset over water",
+    "verdict": "success",
+    "top_results": [
+      {
+        "file": "1 (12).mp4_20250415_012602.575.jpg",
+        "similarity": 0.0778
+      },
+      {
+        "file": "Screenshot 2026-07-05 201536.png",
+        "similarity": 0.0772
+      },
+      {
+        "file": "Screenshot 2026-07-05 201548.png",
+        "similarity": 0.0769
+      },
+      {
+        "file": "Screenshot 2026-07-05 202007.png",
+        "similarity": 0.0738
+      },
+      {
+        "file": "4.png",
+        "similarity": 0.0697
+      }
+    ],
+    "explanation": "first few results are a genuinely great match, warm gradient over water reflection look, but it falls apart toward the end with random blue grid and pixel mosaic stuff",
+    "logged_at": "2026-07-08T12:02:03.653144"
+  },
+  {
+    "query": "a human face",
+    "verdict": "success",
+    "top_results": [
+      {
+        "file": "Screenshot 2026-07-05 195540.png",
+        "similarity": 0.1288
+      },
+      {
+        "file": "Screenshot 2026-07-05 195529.png",
+        "similarity": 0.1261
+      },
+      {
+        "file": "TDMovieOut.0 (2).jpg",
+        "similarity": 0.1224
+      },
+      {
+        "file": "Screenshot 2026-07-05 195624.png",
+        "similarity": 0.1208
+      },
+      {
+        "file": "TDMovieOut.13 (2).jpg",
+        "similarity": 0.1207
+      }
+    ],
+    "explanation": "this one's actually kind of unsettling, almost every result is resembling human face but they are affected heavily with effects ofcourse",
+    "logged_at": "2026-07-08T12:02:03.672073"
+  },
+  {
+    "query": "a swarm of insects",
+    "verdict": "mixed",
+    "top_results": [
+      {
+        "file": "Screenshot 2026-07-05 200155.png",
+        "similarity": 0.1049
+      },
+      {
+        "file": "TDMovieOut.183.jpg",
+        "similarity": 0.1034
+      },
+      {
+        "file": "TDMovieOut.152.jpg",
+        "similarity": 0.1022
+      },
+      {
+        "file": "TDMovieOut.184.jpg",
+        "similarity": 0.1002
+      },
+      {
+        "file": "Screenshot 2026-07-05 200503.png",
+        "similarity": 0.099
+      }
+    ],
+    "explanation": "the pale scattered dots one looks like an actual swarm, but a lot of the rest is just grainy stuff that got pulled in probably cause they resemble swarms from far distance?!",
+    "logged_at": "2026-07-08T12:02:03.691901"
+  },
+  {
+    "query": "flowing hair",
+    "verdict": "mixed",
+    "top_results": [
+      {
+        "file": "TDMovieOut.24.jpg",
+        "similarity": 0.0991
+      },
+      {
+        "file": "Screenshot 2026-07-05 195733.png",
+        "similarity": 0.099
+      },
+      {
+        "file": "Screenshot 2026-07-05 200541.png",
+        "similarity": 0.0987
+      },
+      {
+        "file": "TDMovieOut.28.jpg",
+        "similarity": 0.0951
+      },
+      {
+        "file": "TDMovieOut.176.jpg",
+        "similarity": 0.0946
+      }
+    ],
+    "explanation": "the swirly ones (pink, teal, purple) genuinely have that flowing strand look, it is kind of right on the flow part but for the hair it is hard for it to come up with anything better",
+    "logged_at": "2026-07-08T12:02:03.710461"
+  },
+  {
+    "query": "storm clouds",
+    "verdict": "mixed",
+    "top_results": [
+      {
+        "file": "TDMovieOut.156.jpg",
+        "similarity": 0.1064
+      },
+      {
+        "file": "TDMovieOut.158.jpg",
+        "similarity": 0.088
+      },
+      {
+        "file": "TDMovieOut.53.jpg",
+        "similarity": 0.0854
+      },
+      {
+        "file": "Screenshot 2026-07-05 201751.png",
+        "similarity": 0.0852
+      },
+      {
+        "file": "Screenshot 2026-07-05 201746.png",
+        "similarity": 0.082
+      }
+    ],
+    "explanation": "the streaky gray ones are believable as heavy cloud texture but then colorful splash show up which don't fit at all",
+    "logged_at": "2026-07-08T12:02:03.730656"
+  },
+  {
+    "query": "a galaxy or nebula",
+    "verdict": "success",
+    "top_results": [
+      {
+        "file": "1 (3).mp4_20250415_012151.769.jpg",
+        "similarity": 0.1413
+      },
+      {
+        "file": "Screenshot 2026-07-05 195642.png",
+        "similarity": 0.1338
+      },
+      {
+        "file": "Screenshot 2026-07-05 195700.png",
+        "similarity": 0.1278
+      },
+      {
+        "file": "TDMovieOut.35.jpg",
+        "similarity": 0.1208
+      },
+      {
+        "file": "Screenshot 2026-07-05 200803.png",
+        "similarity": 0.1207
+      }
+    ],
+    "explanation": "genuinely the best result set, the dark blue starfield one and the orange nebula-blob one look like space photos",
+    "logged_at": "2026-07-08T12:02:03.752333"
+  },
+  {
+    "query": "fire and smoke",
+    "verdict": "success",
+    "top_results": [
+      {
+        "file": "TDMovieOut.27.jpg",
+        "similarity": 0.124
+      },
+      {
+        "file": "TDMovieOut.75.jpg",
+        "similarity": 0.1171
+      },
+      {
+        "file": "1 (8).mp4_20250415_012334.920.jpg",
+        "similarity": 0.1124
+      },
+      {
+        "file": "TDMovieOut.76.jpg",
+        "similarity": 0.1084
+      },
+      {
+        "file": "Screenshot 2026-07-05 195948.png",
+        "similarity": 0.1081
+      }
+    ],
+    "explanation": "the orange/black swirl and the marble sphere both have kindaa the fire look, and the grainy dark one actually reads more like smoke than fire",
+    "logged_at": "2026-07-08T12:02:03.773330"
+  },
+  {
+    "query": "cracked stone or ceramic",
+    "verdict": "success",
+    "top_results": [
+      {
+        "file": "Screenshot 2026-07-05 201639.png",
+        "similarity": 0.1092
+      },
+      {
+        "file": "Screenshot 2026-07-05 201632.png",
+        "similarity": 0.107
+      },
+      {
+        "file": "TDMovieOut.10~2.jpg",
+        "similarity": 0.1068
+      },
+      {
+        "file": "TDMovieOut.52.jpg",
+        "similarity": 0.106
+      },
+      {
+        "file": "Screenshot 2026-07-05 201605.png",
+        "similarity": 0.1052
+      }
+    ],
+    "explanation": "good matches, the dark cratered textures really do look like cracked surfaces",
+    "logged_at": "2026-07-08T12:02:03.793720"
+  },
+  {
+    "query": "circuit board pattern",
+    "verdict": "success",
+    "top_results": [
+      {
+        "file": "Screenshot 2026-07-05 200945.png",
+        "similarity": 0.1349
+      },
+      {
+        "file": "Screenshot 2026-07-05 201303.png",
+        "similarity": 0.1347
+      },
+      {
+        "file": "TDMovieOut.94.jpg",
+        "similarity": 0.1332
+      },
+      {
+        "file": "Screenshot 2026-07-05 201244.png",
+        "similarity": 0.1326
+      },
+      {
+        "file": "TDMovieOut.16.jpg",
+        "similarity": 0.1306
+      }
+    ],
+    "explanation": "by far the most consistent result set out of everything, same grid screenshots keep showing up here and honestly this is the strongest, most obvious match in the whole atlas",
+    "logged_at": "2026-07-08T12:02:03.829054"
+  },
+  {
+    "query": "dense forest canopy",
+    "verdict": "mixed",
+    "top_results": [
+      {
+        "file": "TDMovieOut.5.jpg",
+        "similarity": 0.0803
+      },
+      {
+        "file": "TDMovieOut.0.mov_20250415_061659.876.jpg",
+        "similarity": 0.0798
+      },
+      {
+        "file": "TDMovieOut.4.jpg",
+        "similarity": 0.0793
+      },
+      {
+        "file": "TDMovieOut.3.jpg",
+        "similarity": 0.0778
+      },
+      {
+        "file": "TDMovieOut.153.jpg",
+        "similarity": 0.0728
+      }
+    ],
+    "explanation": "the green/purple ones from above kind of read as canopy seen from a drone, but half the results have similarities but I couldnt connect them before this, more color-matching than concept-matching I think",
+    "logged_at": "2026-07-08T12:02:03.852621"
+  },
+  {
+    "query": "frog",
+    "verdict": "failure",
+    "top_results": [
+      {
+        "file": "TDMovieOut.12.jpg",
+        "similarity": 0.0759
+      },
+      {
+        "file": "TDMovieOut.24.jpg",
+        "similarity": 0.0723
+      },
+      {
+        "file": "TDMovieOut.57.jpg",
+        "similarity": 0.0692
+      },
+      {
+        "file": "TDMovieOut.185.jpg",
+        "similarity": 0.0667
+      },
+      {
+        "file": "TDMovieOut.8.png",
+        "similarity": 0.066
+      }
+    ],
+    "explanation": "kind of a joke query but wanted to see, none of these look like a frog, closest is the bumpy grainy texture which could pass as frog skin if I squint but that's a stretch",
+    "logged_at": "2026-07-08T12:02:03.873212"
+  },
+  {
+    "query": "ripples on water",
+    "verdict": "failure",
+    "top_results": [
+      {
+        "file": "Screenshot 2026-07-05 202007.png",
+        "similarity": 0.126
+      },
+      {
+        "file": "Screenshot 2026-07-05 200611.png",
+        "similarity": 0.1198
+      },
+      {
+        "file": "Screenshot 2026-07-05 201722.png",
+        "similarity": 0.1193
+      },
+      {
+        "file": "Screenshot 2026-07-05 201624.png",
+        "similarity": 0.1118
+      },
+      {
+        "file": "Screenshot 2026-07-05 200541.png",
+        "similarity": 0.1062
+      }
+    ],
+    "explanation": "the yellow/black contour map (JFA) is a good match for ripples, rest are not good enough to pass i would say",
+    "logged_at": "2026-07-08T12:02:03.892824"
+  },
+  {
+    "query": "DNA or cellular structure",
+    "verdict": "success",
+    "top_results": [
+      {
+        "file": "TDMovieOut.6 (3).jpg",
+        "similarity": 0.142
+      },
+      {
+        "file": "TDMovieOut.5 (3).jpg",
+        "similarity": 0.1393
+      },
+      {
+        "file": "TDMovieOut.7 (2).jpg",
+        "similarity": 0.1339
+      },
+      {
+        "file": "TDMovieOut.72.jpg",
+        "similarity": 0.1311
+      },
+      {
+        "file": "TDMovieOut.182.jpg",
+        "similarity": 0.1308
+      }
+    ],
+    "explanation": "first 3 results are basically the same faint grid image repeated which isn't DNA-like at all but i seee the medical resembles for all the returned images, but the colorful blob one after that genuinely does look cell-like",
+    "logged_at": "2026-07-08T12:02:03.914017"
+  },
+  {
+    "query": "fabric or woven texture",
+    "verdict": "success",
+    "top_results": [
+      {
+        "file": "TDMovieOut.60.jpg",
+        "similarity": 0.1192
+      },
+      {
+        "file": "TDMovieOut.62.jpg",
+        "similarity": 0.1188
+      },
+      {
+        "file": "TDMovieOut.61.jpg",
+        "similarity": 0.1185
+      },
+      {
+        "file": "TDMovieOut.81.jpg",
+        "similarity": 0.1174
+      },
+      {
+        "file": "TDMovieOut.32.jpg",
+        "similarity": 0.113
+      }
+    ],
+    "explanation": "good one, the dark woven textures look like actual fabric weave and the smooth cream swirl ones look like folded cloth, solid match across the board",
+    "logged_at": "2026-07-08T12:02:03.934529"
+  },
+  {
+    "query": "lightning",
+    "verdict": "success",
+    "top_results": [
+      {
+        "file": "Screenshot 2026-07-05 202016.png",
+        "similarity": 0.1272
+      },
+      {
+        "file": "1 (4).mp4_20250415_014346.975.jpg",
+        "similarity": 0.1195
+      },
+      {
+        "file": "Screenshot 2026-07-05 201958.png",
+        "similarity": 0.1098
+      },
+      {
+        "file": "Screenshot 2026-07-05 195748.png",
+        "similarity": 0.1066
+      },
+      {
+        "file": "Screenshot 2026-07-05 195716.png",
+        "similarity": 0.1018
+      }
+    ],
+    "explanation": "surprised me, the jagged blue streaks and the orange starburst both kinda read as electricity/sparks, this one just works",
+    "logged_at": "2026-07-08T12:02:03.955175"
+  },
+  {
+    "query": "a school of fish",
+    "verdict": "mixed",
+    "top_results": [
+      {
+        "file": "TDMovieOut.152.jpg",
+        "similarity": 0.098
+      },
+      {
+        "file": "Screenshot 2026-07-05 200541.png",
+        "similarity": 0.0955
+      },
+      {
+        "file": "TDMovieOut.170.jpg",
+        "similarity": 0.0924
+      },
+      {
+        "file": "ashk.mp4_20250415_013012.229.jpg",
+        "similarity": 0.0918
+      },
+      {
+        "file": "Screenshot 2026-07-05 200524.png",
+        "similarity": 0.0829
+      }
+    ],
+    "explanation": "the blue streaky line ones do look like fish swimming in formation which is cool, but then random unrelated pink and blue block stuff snuck in too",
+    "logged_at": "2026-07-08T12:02:03.975391"
+  },
+  {
+    "query": "melting ice",
+    "verdict": "mixed",
+    "top_results": [
+      {
+        "file": "Screenshot 2026-07-05 201639.png",
+        "similarity": 0.1225
+      },
+      {
+        "file": "Screenshot 2026-07-05 201605.png",
+        "similarity": 0.116
+      },
+      {
+        "file": "TDMovieOut.158.jpg",
+        "similarity": 0.115
+      },
+      {
+        "file": "Screenshot 2026-07-05 201632.png",
+        "similarity": 0.1134
+      },
+      {
+        "file": "Screenshot 2026-07-05 201613.png",
+        "similarity": 0.112
+      }
+    ],
+    "explanation": "the grainy black and white textures kind of pass as ice/frost but that one colorful marble sphere at the end makes no sense here, feels like a color-based fluke",
+    "logged_at": "2026-07-08T12:02:03.993708"
+  },
+  {
+    "query": "a spider web",
+    "verdict": "success",
+    "top_results": [
+      {
+        "file": "TDMovieOut.180.jpg",
+        "similarity": 0.111
+      },
+      {
+        "file": "TDMovieOut.6.jpg",
+        "similarity": 0.1068
+      },
+      {
+        "file": "Screenshot 2026-07-05 195748.png",
+        "similarity": 0.1017
+      },
+      {
+        "file": "TDMovieOut.7 (2).jpg",
+        "similarity": 0.1009
+      },
+      {
+        "file": "TDMovieOut.7.jpg",
+        "similarity": 0.0998
+      }
+    ],
+    "explanation": "actually pretty good, a bunch of the green branching ones genuinely look like web strands radiating out, didn't expect that to work this well",
+    "logged_at": "2026-07-08T12:02:04.018880"
+  },
+  {
+    "query": "sparse minimal composition",
+    "verdict": "failure",
+    "top_results": [
+      {
+        "file": "TDMovieOut.97.jpg",
+        "similarity": 0.112
+      },
+      {
+        "file": "Screenshot 2026-07-05 201244.png",
+        "similarity": 0.1087
+      },
+      {
+        "file": "Screenshot 2026-07-05 201230.png",
+        "similarity": 0.1067
+      },
+      {
+        "file": "TDMovieOut.19 (2).jpg",
+        "similarity": 0.1066
+      },
+      {
+        "file": "Screenshot 2026-07-05 200945.png",
+        "similarity": 0.1063
+      }
+    ],
+    "explanation": "mostly pulled the same grid/graph-paper screenshots over and over, that's not sparse at all, it's dense and repetitive, feels like it just latched onto thin dark lines on light bg",
+    "logged_at": "2026-07-08T12:02:04.038975"
+  }
+]

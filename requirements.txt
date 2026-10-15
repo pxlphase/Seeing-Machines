@@ -1,0 +1,12 @@
+# Dependencies for notebooks/seeing_machines.ipynb (Google Colab, T4 GPU).
+# Colab already ships torch, torchvision, pandas, matplotlib and Pillow.
+# numpy<2 and the bitsandbytes floor mirror the notebook's install cell.
+numpy<2.0.0
+bitsandbytes>=0.46.1
+transformers>=4.50.0   # Gemma 3 support; not tested against older versions
+accelerate
+gradio
+open_clip_torch
+sentence-transformers
+einops
+safetensors
